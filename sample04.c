@@ -78,18 +78,17 @@ S4...正面タッチセンサー
 void tsk1(VP_INT exinf){
 	
 	// TODO Light Sensor ポート番号変える
-	if(ecrobot_get_light_sensor(NXT_PORT_S1) < LIGHT_THRESHOLD){
+/*	if(ecrobot_get_light_sensor(NXT_PORT_S1) < LIGHT_THRESHOLD){
 		//白い場合，turnback()
 		initMove();
 		
 		turnback();
-	}else{
+	}else{*/
 		//黒い場合，removeALL()
 		initMove();
 		
-		ecrobot_set_motor_speed(NXT_PORT_C, 0);	
 		removeAll();
-	}
+//	}
 
 	//自タスクの終了
 	ext_tsk();
@@ -104,7 +103,7 @@ void initMove(void){
 	//	systick_wait_ms(2000);
 	ecrobot_set_motor_speed(NXT_PORT_A, -80);
 	ecrobot_set_motor_speed(NXT_PORT_C, 80);
-	systick_wait_ms(2500);
+	systick_wait_ms(3000);
 	ecrobot_set_motor_speed(NXT_PORT_A, 0);
 	ecrobot_set_motor_speed(NXT_PORT_C, 0);	
 }
@@ -148,12 +147,7 @@ void removeAll(void){
 	ecrobot_set_motor_speed(NXT_PORT_C, -80);
 	
 	// TODO TOUCHセンサー位置を変更
-	while(1){
-		if(!ecrobot_get_touch_sensor(NXT_PORT_S4)){
-			systick_wait_ms(100);
-		}else{
-			break;
-		}
+	while(!ecrobot_get_touch_sensor(NXT_PORT_S4)){
 	}
 	
 	ecrobot_set_motor_speed(NXT_PORT_A, 0);
