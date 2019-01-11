@@ -1,10 +1,9 @@
 /**
  * sample04.c
  *
- * ƒ‰ƒCƒ“ƒgƒŒ[ƒX
- * ‰E‚É‹È‚ª‚èCü‚©‚çŠO‚ê‚½‚ç•‚¢ü‚É‚È‚é‚Ü‚Å¶‚É‹È‚ª‚é
- * COPYRIGHT(c)2009 Afrel Co., Ltd.
- * All rights reserved
+ * 
+ * å³ã«æ›²ãŒã‚Šï¼Œç·šã‹ã‚‰å¤–ã‚ŒãŸã‚‰é»’ã„ç·šã«ãªã‚‹ã¾ã§å·¦ã«æ›²ãŒã‚‹
+ * COPYRIGHT(c)2019 kaniyama_t.
  */
 
 #include <itron.h> 
@@ -12,13 +11,13 @@
 #include "kernel_id.h"
 #include "ecrobot_interface.h"
 
-#define LIGHT_THRESHOLD 600	//è‡’l
+#define LIGHT_THRESHOLD 600	//é–¾å€¤
 #define SOUND_VALUE 600
 
-//‰t»ƒfƒBƒXƒvƒŒƒC‚É•\¦‚·‚éƒVƒXƒeƒ€–¼İ’è
+//æ¶²æ™¶ãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ã‚¤ã«è¡¨ç¤ºã™ã‚‹ã‚·ã‚¹ãƒ†ãƒ åè¨­å®š
 const char target_subsystem_name[] = "JSP Sample04";
 
-// ƒvƒƒgƒ^ƒCƒvéŒ¾
+// ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
 void turnback(void);
 void removeAll(void);
 void initMove(void);
@@ -28,14 +27,14 @@ void jsp_systick_low_priority(void) {
 	check_NXT_buttons();
 }
 
-//‰Šúˆ—
+//åˆæœŸå‡¦ç†
 void ecrobot_device_initialize(void) {
 	ecrobot_set_light_sensor_active(NXT_PORT_S1);
 	ecrobot_set_light_sensor_active(NXT_PORT_S2);
 	//ecrobot_set_sound_sensor_active(NXT_PORT_S3);
 }
 
-//Œãn––ˆ—
+//å¾Œå§‹æœ«å‡¦ç†
 void ecrobot_device_terminate(void) {
 	ecrobot_set_motor_speed(NXT_PORT_A, 0);
 	ecrobot_set_motor_speed(NXT_PORT_C, 0);
@@ -44,62 +43,68 @@ void ecrobot_device_terminate(void) {
 	//ecrobot_set_sound_sensor_inactive(NXT_PORT_S3);
 }
 
-//üŠúƒnƒ“ƒhƒ‰0—p‚ÌŠÖ”
+//å‘¨æœŸãƒãƒ³ãƒ‰ãƒ©0ç”¨ã®é–¢æ•°
 void cyc0(VP_INT exinf) {
 
-	//ƒ^ƒXƒN‚ğ‹N“®‚·‚é
+	//ã‚¿ã‚¹ã‚¯ã‚’èµ·å‹•ã™ã‚‹
 	iact_tsk(TSK0);
 }
 
-//üŠúƒnƒ“ƒhƒ‰1—p‚ÌŠÖ”
+//å‘¨æœŸãƒãƒ³ãƒ‰ãƒ©1ç”¨ã®é–¢æ•°
 void cyc1(VP_INT exinf) {
 
-	//ƒ^ƒXƒN‚ğ‹N“®‚·‚é
+	//ã‚¿ã‚¹ã‚¯ã‚’èµ·å‹•ã™ã‚‹
 	iact_tsk(TSK1);
 }
 
-//ƒ^ƒXƒN0—p‚ÌŠÖ”
+//ã‚¿ã‚¹ã‚¯0ç”¨ã®é–¢æ•°
 void tsk0(VP_INT exinf){
 
-	//ƒ‚ƒjƒ^‚ğ•\¦‚·‚é
+	//ãƒ¢ãƒ‹ã‚¿ã‚’è¡¨ç¤ºã™ã‚‹
 	ecrobot_status_monitor(target_subsystem_name);
 
-	//©ƒ^ƒXƒN‚ÌI—¹
+	//è‡ªã‚¿ã‚¹ã‚¯ã®çµ‚äº†
 	ext_tsk();
 }
 
 /*
-S1...ƒ‚[ƒh¯•ÊƒJƒ‰[ƒZƒ“ƒT[
-S2...’n–Êİ’u•”ƒJƒ‰[ƒZƒ“ƒT[
-S3...ƒTƒEƒ“ƒhƒZƒ“ƒT[
-S4...³–Êƒ^ƒbƒ`ƒZƒ“ƒT[
+S1...ãƒ¢ãƒ¼ãƒ‰è­˜åˆ¥ã‚«ãƒ©ãƒ¼ã‚»ãƒ³ã‚µãƒ¼
+S2...åœ°é¢è¨­ç½®éƒ¨ã‚«ãƒ©ãƒ¼ã‚»ãƒ³ã‚µãƒ¼
+S3...ã‚µã‚¦ãƒ³ãƒ‰ã‚»ãƒ³ã‚µãƒ¼
+S4...æ­£é¢ã‚¿ãƒƒãƒã‚»ãƒ³ã‚µãƒ¼
 */
 
-//ƒ^ƒXƒN1—p‚ÌŠÖ”
+//ã‚¿ã‚¹ã‚¯1ç”¨ã®é–¢æ•°
 void tsk1(VP_INT exinf){
 	
-	// TODO Light Sensor ƒ|[ƒg”Ô†•Ï‚¦‚é
+	// TODO Light Sensor ãƒãƒ¼ãƒˆç•ªå·å¤‰ãˆã‚‹
 	if(ecrobot_get_light_sensor(NXT_PORT_S1) < LIGHT_THRESHOLD){
-		//”’‚¢ê‡Cturnback()
+		//ç™½ã„å ´åˆï¼Œturnback()
 		initMove();
 		
 		turnback();
 	}else{
-		//•‚¢ê‡C‰E‚É‹È‚ª‚é
+		//é»’ã„å ´åˆï¼ŒremoveALL()
 		initMove();
 		
 		ecrobot_set_motor_speed(NXT_PORT_C, 0);	
 		removeAll();
 	}
 
-	//©ƒ^ƒXƒN‚ÌI—¹
+	//è‡ªã‚¿ã‚¹ã‚¯ã®çµ‚äº†
 	ext_tsk();
 }
 
 void initMove(void){
-	ecrobot_set_motor_speed(NXT_PORT_A, 0);
-	ecrobot_set_motor_speed(NXT_PORT_C, -80);
-	systick_wait_ms(2000);
+	ecrobot_set_motor_speed(NXT_PORT_A, 80);
+	ecrobot_set_motor_speed(NXT_PORT_C, 80);
+	// TODO Sound SENSOR ãƒãƒ¼ãƒˆç•ªå·å¤šåˆ†é–“é•ã£ã¦ã‚‹
+	while(ecrobot_get_sound_sensor(NXT_PORT_S3) <= SOUND_VALUE) systick_wait_ms(50);
+	while(ecrobot_get_sound_sensor(NXT_PORT_S3) >= SOUND_VALUE) systick_wait_ms(50);	
+	//	systick_wait_ms(2000);
+	ecrobot_set_motor_speed(NXT_PORT_A, -80);
+	ecrobot_set_motor_speed(NXT_PORT_C, 80);
+	systick_wait_ms(2500);
 	ecrobot_set_motor_speed(NXT_PORT_A, 0);
 	ecrobot_set_motor_speed(NXT_PORT_C, 0);	
 }
@@ -124,7 +129,7 @@ void turnback(void){
 //		systick_wait_ms(50);
 //	}
 	
-	// TODO Sound SENSOR ƒ|[ƒg”Ô†‘½•ªŠÔˆá‚Á‚Ä‚é
+	// TODO Sound SENSOR ãƒãƒ¼ãƒˆç•ªå·å¤šåˆ†é–“é•ã£ã¦ã‚‹
 	while(ecrobot_get_sound_sensor(NXT_PORT_S3) <= SOUND_VALUE);
 	while(ecrobot_get_sound_sensor(NXT_PORT_S3) >= SOUND_VALUE);
 	
@@ -142,12 +147,19 @@ void removeAll(void){
 	ecrobot_set_motor_speed(NXT_PORT_A, -80);
 	ecrobot_set_motor_speed(NXT_PORT_C, -80);
 	
-	// TODO TOUCHƒZƒ“ƒT[ˆÊ’u‚ğ•ÏX
-	while(!ecrobot_get_touch_sensor(NXT_PORT_S4)){
-		systick_wait_ms(100);
+	// TODO TOUCHã‚»ãƒ³ã‚µãƒ¼ä½ç½®ã‚’å¤‰æ›´
+	while(1){
+		if(!ecrobot_get_touch_sensor(NXT_PORT_S4)){
+			systick_wait_ms(100);
+		}else{
+			break;
+		}
 	}
 	
 	ecrobot_set_motor_speed(NXT_PORT_A, 0);
 	ecrobot_set_motor_speed(NXT_PORT_C, 0);
+	ecrobot_set_motor_speed(NXT_PORT_B, -30);
+	systick_wait_ms(1000);
+	ecrobot_set_motor_speed(NXT_PORT_B, 0);
 	
 }
